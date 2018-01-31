@@ -86,6 +86,9 @@ namespace TP_AchievementEditor
                       "Assets/TP_Creator/TP_AchievementCreator/EditorResources/TPAchievementGUISkin.guiskin",
                       typeof(GUISkin)) as GUISkin;
 
+            if (EditorData.AchievementsPath == null || EditorData.AchievementsPath.Length < 5)
+                EditorData.AchievementsPath = "TP_Creator/TP_AchievementCreator/AchievementData/";
+
             EditorUtility.SetDirty(EditorData);
         }
 
@@ -227,8 +230,7 @@ namespace TP_AchievementEditor
         {
             if (AchievementCreator)
             {
-                //SaveLoadCreator.Refresh();
-                //SaveLoadCreator.OnValidate();
+                AchievementCreator.Refresh();
                 EditorUtility.SetDirty(AchievementCreator);
             }
 
@@ -255,18 +257,18 @@ namespace TP_AchievementEditor
                 return;
             }
 
-            //if (GUILayout.Button("Achievements", skin.button, GUILayout.Height(60)))
-            //{
-            //    TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.);
-            //}
-            //if (GUILayout.Button("XML Persistance", skin.button, GUILayout.Height(60)))
-            //{
-            //    TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.);
-            //}
-            //if (GUILayout.Button("Binary Persistance", skin.button, GUILayout.Height(60)))
-            //{
-            //    TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.);
-            //}
+            if (GUILayout.Button("Achievements", skin.button, GUILayout.Height(60)))
+            {
+                TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.Achievements);
+            }
+            if (GUILayout.Button("Notification", skin.button, GUILayout.Height(60)))
+            {
+                TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.Notification);
+            }
+            if (GUILayout.Button("Layout", skin.button, GUILayout.Height(60)))
+            {
+                TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.Layout);
+            }
             GUILayout.EndArea();
         }
 

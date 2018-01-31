@@ -12,33 +12,14 @@ namespace TP_AchievementEditor
         public static TPAchievementToolsWindow window;
         public enum Tool
         {
-            JSON
+            Achievements,
+            Notification,
+            Layout
         }
         public static Tool tool;
 
-        SerializedProperty _JSONPersistance;
-        SerializedProperty _XMLPersistance;
-        SerializedProperty _BinaryPersistance;
-
-        SerializedProperty j_UseApplicationPath;
-        SerializedProperty j_SaveName;
-        SerializedProperty j_ExtensionName;
-        SerializedProperty j_CustomPath;
-
-        SerializedProperty x_UseApplicationPath;
-        SerializedProperty x_SaveName;
-        SerializedProperty x_ExtensionName;
-        SerializedProperty x_CustomPath;
-
-        SerializedProperty b_UseApplicationPath;
-        SerializedProperty b_SaveName;
-        SerializedProperty b_ExtensionName;
-        SerializedProperty b_CustomPath;
-
-        GUIContent content0 = new GUIContent("Application Path");
-        GUIContent content1 = new GUIContent("Save File Name");
-        GUIContent content2 = new GUIContent("Extension Name");
-        GUIContent content3 = new GUIContent("Custom Application Path");
+        SerializedProperty _Achievements;
+        SerializedProperty _Notifications;
         
         Texture2D mainTexture;
         Vector2 scrollPos = Vector2.zero;
@@ -86,24 +67,8 @@ namespace TP_AchievementEditor
 
         void FindLayoutProperties()
         {
-            _JSONPersistance = TPAchievementDesigner.creator.FindProperty("JSONMethod");
-            _XMLPersistance = TPAchievementDesigner.creator.FindProperty("XMLMethod");
-            _BinaryPersistance = TPAchievementDesigner.creator.FindProperty("BinaryMethod");
-
-            j_UseApplicationPath = _JSONPersistance.FindPropertyRelative("UseApplicationPath");
-            j_SaveName = _JSONPersistance.FindPropertyRelative("SaveName");
-            j_ExtensionName = _JSONPersistance.FindPropertyRelative("ExtensionName");
-            j_CustomPath = _JSONPersistance.FindPropertyRelative("CustomPath");
-
-            x_UseApplicationPath = _XMLPersistance.FindPropertyRelative("UseApplicationPath");
-            x_SaveName = _XMLPersistance.FindPropertyRelative("SaveName");
-            x_ExtensionName = _XMLPersistance.FindPropertyRelative("ExtensionName");
-            x_CustomPath = _XMLPersistance.FindPropertyRelative("CustomPath");
-
-            b_UseApplicationPath = _BinaryPersistance.FindPropertyRelative("UseApplicationPath");
-            b_SaveName = _BinaryPersistance.FindPropertyRelative("SaveName");
-            b_ExtensionName = _BinaryPersistance.FindPropertyRelative("ExtensionName");
-            b_CustomPath = _BinaryPersistance.FindPropertyRelative("CustomPath");
+            _Achievements = TPAchievementDesigner.creator.FindProperty("Achievements");
+            _Notifications = TPAchievementDesigner.creator.FindProperty("Notifications");
         }
 
         void InitTextures()
@@ -127,52 +92,119 @@ namespace TP_AchievementEditor
         {
             switch (tool)
             {
-                case Tool.:
-
+                case Tool.Achievements:
+                    DrawObjects(_Achievements);
                     break;
-                case Tool.:
-
+                case Tool.Notification:
+                    DrawObjects(_Notifications);
                     break;
-                case Tool.:
-
-                    break;
-                default:
+                case Tool.Layout:
+                    DrawLayout();
                     break;
             }
         }
 
         
-        void DrawMethod(SerializedProperty property)
+        void DrawObjects(SerializedProperty property)
         {
             property.serializedObject.UpdateIfRequiredOrScript();
 
             EditorGUILayout.BeginVertical();
 
-            //Space(3);
-            //EditorGUILayout.LabelField(content0, TPAchievementDesigner.skin.GetStyle("TipLabel"));
-            //EditorGUILayout.PropertyField(GetProperty(0), GUIContent.none);
+            if (GUILayout.Button("Create new", TPAchievementDesigner.EditorData.GUISkin.button))
+            {
+                CreateScriptable();
+            }
 
-            //Space(3);
-            //EditorGUILayout.LabelField(content1, TPAchievementDesigner.skin.GetStyle("TipLabel"));
-            //EditorGUILayout.PropertyField(GetProperty(1), GUIContent.none);
+            Space(2);
 
-            //Space(3);
-            //EditorGUILayout.LabelField(content2, TPAchievementDesigner.skin.GetStyle("TipLabel"));
-            //EditorGUILayout.PropertyField(GetProperty(2), GUIContent.none);
+            if (property.arraySize <= 0)
+            {
+                EditorGUILayout.HelpBox("There is no Object Loaded!", MessageType.Error);
+                EditorGUILayout.EndVertical();
+                return;
+            }
 
-            //if (IsCustom())
-            //{
-            //    Space(3);
-            //    EditorGUILayout.LabelField(content3, TPAchievementDesigner.skin.GetStyle("TipLabel"));
-            //    EditorGUILayout.PropertyField(GetProperty(3), GUIContent.none);
-            //}
+            foreach (SerializedProperty item in property)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PropertyField(item, GUIContent.none);
+                DeleteAsset(item.objectReferenceValue as UnityEngine.Object);
+                EditAsset(item.objectReferenceValue as UnityEngine.Object);
+                EditorGUILayout.EndHorizontal();
+            }
 
             if (GUI.changed)
                 property.serializedObject.ApplyModifiedProperties();
 
             EditorGUILayout.EndVertical();
         }
-        
+
+        void DrawNotification()
+        {
+            
+        }
+
+        void DrawLayout()
+        {
+
+        }
+
+        void DeleteAsset(UnityEngine.Object obj)
+        {
+            if (GUILayout.Button("Del", GUILayout.Width(30)))
+            {
+                string assetPath = AssetDatabase.GetAssetPath(obj);
+                AssetDatabase.MoveAssetToTrash(assetPath);
+
+                TPAchievementDesigner.UpdateManager();
+                DrawTool();
+            }
+        }
+
+        void EditAsset(UnityEngine.Object obj)
+        {
+            if (GUILayout.Button("Edit", GUILayout.Width(40)))
+            {
+                AssetDatabase.OpenAsset(obj);
+            }
+        }
+
+        void CreateScriptable()
+        {
+            string assetPath = "Assets/" + TPAchievementDesigner.EditorData.AchievementsPath;
+            string newAssetPath = assetPath;
+            UnityEngine.Object newObj = null;
+
+            switch (tool)
+            {
+                case Tool.Achievements:
+                    newObj = ScriptableObject.CreateInstance<TPAchievement>();
+                    newAssetPath += "New Achievement.asset";
+                    break;
+                case Tool.Notification:
+                    newObj = ScriptableObject.CreateInstance<TPNotification>();
+                    newAssetPath += "New Notification.asset";
+                    break;
+                case Tool.Layout:
+                    break;
+                default:
+                    break;
+            }
+
+            if (!AssetDatabase.IsValidFolder(assetPath))
+                System.IO.Directory.CreateDirectory(assetPath);
+
+            AssetDatabase.CreateAsset(newObj, AssetDatabase.GenerateUniqueAssetPath(newAssetPath));
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            AssetDatabase.OpenAsset(newObj);
+
+            Debug.Log(newObj.name + " created in " + assetPath);
+            TPAchievementDesigner.UpdateManager();
+            DrawTool();
+        }
+
         void Space(int length)
         {
             for (int i = 0; i < length; i++)

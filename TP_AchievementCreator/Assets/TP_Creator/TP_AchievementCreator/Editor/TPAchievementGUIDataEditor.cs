@@ -26,6 +26,11 @@ namespace TP_AchievementEditor
             TPAchievementData.GUISkin =
                 (EditorGUILayout.ObjectField(TPAchievementData.GUISkin, typeof(GUISkin), true) as GUISkin);
 
+            EditorGUILayout.LabelField("New achievement files - Path");
+            EditorGUILayout.BeginHorizontal();
+            TPAchievementData.AchievementsPath = EditorGUILayout.TextField(TPAchievementData.AchievementsPath);
+            EditorGUILayout.EndHorizontal();
+
             if (GUI.changed)
                 EditorUtility.SetDirty(TPAchievementData);
         }
