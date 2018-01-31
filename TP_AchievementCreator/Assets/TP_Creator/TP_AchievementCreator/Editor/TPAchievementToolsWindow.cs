@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TP_AchievementEditor
 {
@@ -19,7 +21,6 @@ namespace TP_AchievementEditor
         public static Tool tool;
 
         SerializedProperty _Achievements;
-        SerializedProperty _Notifications;
         
         Texture2D mainTexture;
         Vector2 scrollPos = Vector2.zero;
@@ -68,7 +69,6 @@ namespace TP_AchievementEditor
         void FindLayoutProperties()
         {
             _Achievements = TPAchievementDesigner.creator.FindProperty("Achievements");
-            _Notifications = TPAchievementDesigner.creator.FindProperty("Notifications");
         }
 
         void InitTextures()
@@ -96,7 +96,7 @@ namespace TP_AchievementEditor
                     DrawObjects(_Achievements);
                     break;
                 case Tool.Notification:
-                    DrawObjects(_Notifications);
+                    DrawNotification();
                     break;
                 case Tool.Layout:
                     DrawLayout();
@@ -120,7 +120,7 @@ namespace TP_AchievementEditor
 
             if (property.arraySize <= 0)
             {
-                EditorGUILayout.HelpBox("There is no Object Loaded!", MessageType.Error);
+                EditorGUILayout.HelpBox("There is no object loaded!", MessageType.Error);
                 EditorGUILayout.EndVertical();
                 return;
             }
@@ -140,9 +140,44 @@ namespace TP_AchievementEditor
             EditorGUILayout.EndVertical();
         }
 
+        TPNotification notification = null;
         void DrawNotification()
         {
-            
+            if (Event.current.type == EventType.DragPerform)
+            {
+                if (DragAndDrop.objectReferences.Length > 1)
+                {
+                    return;
+                }
+                else
+                {
+                    if (!PrefabUtility.GetPrefabObject(DragAndDrop.objectReferences[0]))
+                    {
+                        return;
+                    }
+                }
+            }
+
+            EditorGUILayout.LabelField("Put there you prefab of TPNotification", TPAchievementDesigner.skin.GetStyle("TipLabel"));
+            notification = EditorGUILayout.ObjectField(notification, typeof(TPNotification), false) as TPNotification;
+
+            if (notification == null)
+                return;
+
+            Space(4);
+            EditorGUILayout.LabelField("Notification's Image for Icon", TPAchievementDesigner.skin.GetStyle("TipLabel"));
+            notification.iconImage = EditorGUILayout.ObjectField(notification.iconImage, typeof(Image), false) as Image;
+            Space(2);
+            EditorGUILayout.LabelField("Notification's TextMeshProUGUI for Title", TPAchievementDesigner.skin.GetStyle("TipLabel"));
+            notification.titleText = EditorGUILayout.ObjectField(notification.titleText, typeof(TextMeshProUGUI), false) as TextMeshProUGUI;
+            Space(2);
+            EditorGUILayout.LabelField("Notification's TextMeshProUGUI for Description", TPAchievementDesigner.skin.GetStyle("TipLabel"));
+            notification.descriptionText = EditorGUILayout.ObjectField(notification.descriptionText, typeof(TextMeshProUGUI), false) as TextMeshProUGUI;
+
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(notification);
+            }
         }
 
         void DrawLayout()
@@ -176,21 +211,8 @@ namespace TP_AchievementEditor
             string newAssetPath = assetPath;
             UnityEngine.Object newObj = null;
 
-            switch (tool)
-            {
-                case Tool.Achievements:
-                    newObj = ScriptableObject.CreateInstance<TPAchievement>();
-                    newAssetPath += "New Achievement.asset";
-                    break;
-                case Tool.Notification:
-                    newObj = ScriptableObject.CreateInstance<TPNotification>();
-                    newAssetPath += "New Notification.asset";
-                    break;
-                case Tool.Layout:
-                    break;
-                default:
-                    break;
-            }
+            newObj = ScriptableObject.CreateInstance<TPAchievement>();
+            newAssetPath += "New Achievement.asset";
 
             if (!AssetDatabase.IsValidFolder(assetPath))
                 System.IO.Directory.CreateDirectory(assetPath);

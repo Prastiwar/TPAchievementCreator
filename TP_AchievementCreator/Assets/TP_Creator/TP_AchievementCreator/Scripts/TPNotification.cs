@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
-[CreateAssetMenu()]
-public class TPNotification : ScriptableObject
+public class TPNotification : MonoBehaviour
 {
+    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI descriptionText;
+    public Image iconImage;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void SetNotification(TPAchievement achievement)
+    {
+        titleText.text = achievement.Title;
+        descriptionText.text = achievement.Description;
+        iconImage.sprite = achievement.Icon;
+    }
 }
