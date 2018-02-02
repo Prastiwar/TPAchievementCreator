@@ -8,10 +8,25 @@ namespace TP_Achievement
     {
         public static bool DebugMode;
         public List<TPAchievement> Achievements = new List<TPAchievement>();
+        Dictionary<string, GameObject> _NotifyGO = new Dictionary<string, GameObject>();
+        Queue<TPAchievement> AchievementQueue = new Queue<TPAchievement>();
+        WaitForSeconds Waiter;
+        WaitUntil Until;
+        float WaitSeconds;
+        bool IsNotify;
         public delegate void NotifyEventHandler(GameObject notification, bool toActive);
-        NotifyEventHandler OnNotifyActive;
-        List<GameObject> _NotifyGO = new List<GameObject>();
-        Queue<TPNotification> Notifications = new Queue<TPNotification>();
+        NotifyEventHandler _onNotifyActive;
+        NotifyEventHandler OnNotifyActive
+        {
+            get
+            {
+                if (_onNotifyActive == null)
+                    _onNotifyActive = SetActive;
+                return _onNotifyActive;
+            }
+            set { _onNotifyActive = value; }
+        }
+
 
 
         public TPAchievement GetAchievement(string name)
@@ -28,11 +43,13 @@ namespace TP_Achievement
         GameObject GetNotificationObject(TPAchievement achievement)
         {
             int length = _NotifyGO.Count;
-            for (int i = 0; i < length; i++)
+            string _name = achievement.Notification.gameObject.name;
+
+            if (_NotifyGO.ContainsKey(_name))
             {
-                if (_NotifyGO[i] == achievement.Notification.gameObject)
-                    return _NotifyGO[i];
+                return _NotifyGO[_name];
             }
+
             return null;
         }
 
@@ -41,57 +58,88 @@ namespace TP_Achievement
             notification.SetActive(toActive);
         }
 
-        public void ShowNotification(TPAchievement achievement, bool Active)
+        public void ShowNotification(TPAchievement achievement)
         {
-            GameObject go = GetNotificationObject(achievement);
-            if (go == null)
-            {
-                go = Instantiate(achievement.Notification.gameObject);
-                go.SetActive(false);
-                _NotifyGO.Add(go);
-            }
-
-            if (OnNotifyActive == null)
-                OnNotifyActive = SetActive;
-
-            achievement.Notification.SetNotification(achievement);
-            StartCoroutine(IEShowNotification(go, achievement, Active));
+            AchievementQueue.Enqueue(achievement);
+            if (!IsNotify)
+                ShowNotification();
         }
 
-        IEnumerator IEShowNotification(GameObject go, TPAchievement achievement, bool Active)
+        void ShowNotification()
         {
-            OnNotifyActive(go, Active);
-            if (Active)
-                Notifications.Enqueue(achievement.Notification);
+            IsNotify = true;
+            TPAchievement achievement = AchievementQueue.Dequeue();
+            GameObject GO = achievement.Notification.gameObject;
+
+            if (!_NotifyGO.ContainsKey(GO.name))
+            {
+                string _GOName = GO.name;
+                GO = Instantiate(GO);
+                GO.SetActive(false);
+                _NotifyGO.Add(_GOName, GO);
+            }
             else
-                Notifications.Dequeue();
-
-            foreach (var item in Notifications)
             {
-                //ShowNotification();
+                GO = GetNotificationObject(achievement);
             }
 
-            yield return null;
+            GO.GetComponent<TPNotification>().SetNotification(achievement);
+            StartCoroutine(IEShowNotification(GO, achievement));
         }
 
-        public void AddPointTo(TPAchievement achievement, bool showNotification)
+        IEnumerator IEShowNotification(GameObject go, TPAchievement achievement)
         {
-            achievement.Points++;
+            OnNotifyActive(go, true);
+
+            if (WaitSeconds != achievement.NotifyLong)
+            {
+                WaitSeconds = achievement.NotifyLong;
+                Waiter = new WaitForSeconds(achievement.NotifyLong);
+            }
+
+            yield return Waiter;
+
+            OnNotifyActive(go, false);
+
+            if (Until == null)
+            {
+                Until = new WaitUntil(() => !go.activeSelf);
+            }
+
+            yield return Until;
+            
+            if (AchievementQueue.Count > 0)
+            {
+                ShowNotification();
+            }
+            else
+            {
+                IsNotify = false;
+            }
+        }
+
+        public void AddPointTo(TPAchievement achievement, float value, bool showProgressNotify, bool showNotifyAfterCompleted)
+        {
+            if (achievement.IsCompleted)
+                return;
+
+            achievement.Points += value;
             if (achievement.Points >= achievement.MaxPoints)
             {
-                CompleteAchievement(achievement, showNotification);
+                CompleteAchievement(achievement, showNotifyAfterCompleted);
                 return;
             }
 
-            if (showNotification)
-                ShowNotification(achievement, true);
+            if (showProgressNotify)
+                ShowNotification(achievement);
         }
 
         public void CompleteAchievement(TPAchievement achievement, bool showNotification)
         {
             achievement.Points = achievement.MaxPoints;
             achievement.IsCompleted = true;
-            ShowNotification(achievement, true);
+            if(showNotification)
+                ShowNotification(achievement);
         }
 
 

@@ -14,4 +14,5 @@ public class TPAchievement : ScriptableObject
     public float MaxPoints;
     [Space]
     public TPNotification Notification;
+    public float NotifyLong;
 }
