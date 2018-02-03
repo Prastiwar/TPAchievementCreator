@@ -265,10 +265,10 @@ namespace TP_AchievementEditor
             {
                 TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.Notification);
             }
-            if (GUILayout.Button("Layout", skin.button, GUILayout.Height(60)))
-            {
-                TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.Layout);
-            }
+            //if (GUILayout.Button("Layout", skin.button, GUILayout.Height(60)))
+            //{
+            //    TPAchievementToolsWindow.OpenToolWindow(TPAchievementToolsWindow.Tool.Layout);
+            //}
             GUILayout.EndArea();
         }
 

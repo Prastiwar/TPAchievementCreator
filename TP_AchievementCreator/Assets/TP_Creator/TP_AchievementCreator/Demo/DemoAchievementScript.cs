@@ -38,7 +38,6 @@ public class DemoAchievementScript : MonoBehaviour
     IEnumerator Fading(GameObject notification, bool toActive)
     {
         CanvasGroup group = notification.GetComponent<CanvasGroup>();
-        TPNotification notify = notification.GetComponent<TPNotification>();
 
         if (toActive)
         {

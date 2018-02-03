@@ -15,7 +15,7 @@ namespace TP_Achievement
         WaitForSeconds Waiter;
         WaitUntil Until;
         float WaitSeconds;
-        bool IsNotify;
+        [SerializeField] bool IsNotify;
 
         public delegate void NotifyActivationEventHandler(GameObject notification, bool toActive);
         public delegate void NotifySettingEventHandler(TPNotification notification, TPAchievement achievement);

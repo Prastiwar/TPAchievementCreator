@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 224992023365767272}
   - component: {fileID: 223481925151402752}
   - component: {fileID: 225465783024560616}
-  - component: {fileID: 114227792064254434}
+  - component: {fileID: 114558918166523734}
   m_Layer: 5
   m_Name: NotificationCanvas
   m_TagString: Untagged
@@ -418,23 +418,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114227792064254434
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1437777658195554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c41ac9b6507e7e4e9c11382faa2f7b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  iconImage: {fileID: 114204494611798186}
-  pointsText: {fileID: 114378084582367808}
-  maxPointsText: {fileID: 114092106053283744}
-  titleText: {fileID: 114242293468601334}
-  descriptionText: {fileID: 114223483313586076}
-  OnAchievement: {fileID: 0}
 --- !u!114 &114242293468601334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -686,6 +669,23 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114558918166523734
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437777658195554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c41ac9b6507e7e4e9c11382faa2f7b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconImage: {fileID: 114204494611798186}
+  pointsText: {fileID: 114378084582367808}
+  maxPointsText: {fileID: 114092106053283744}
+  titleText: {fileID: 114242293468601334}
+  descriptionText: {fileID: 114223483313586076}
+  OnAchievement: {fileID: 0}
 --- !u!114 &114683989009083994
 MonoBehaviour:
   m_ObjectHideFlags: 1

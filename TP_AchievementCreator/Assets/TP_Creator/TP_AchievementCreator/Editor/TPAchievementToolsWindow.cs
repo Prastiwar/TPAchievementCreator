@@ -21,7 +21,9 @@ namespace TP_AchievementEditor
         public static Tool tool;
 
         SerializedProperty _Achievements;
-        
+        TPNotification notification = null;
+        GameObject _notification;
+
         Texture2D mainTexture;
         Vector2 scrollPos = Vector2.zero;
         Vector2 textureVec;
@@ -128,8 +130,8 @@ namespace TP_AchievementEditor
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PropertyField(item, GUIContent.none);
-                DeleteAsset(item.objectReferenceValue as UnityEngine.Object);
                 EditAsset(item.objectReferenceValue as UnityEngine.Object);
+                DeleteAsset(item.objectReferenceValue as UnityEngine.Object);
                 EditorGUILayout.EndHorizontal();
             }
 
@@ -139,7 +141,6 @@ namespace TP_AchievementEditor
             EditorGUILayout.EndVertical();
         }
 
-        TPNotification notification = null;
         void DrawNotification()
         {
             if (Event.current.type == EventType.DragPerform)
@@ -148,20 +149,18 @@ namespace TP_AchievementEditor
                 {
                     return;
                 }
-                else
-                {
-                    if (!PrefabUtility.GetPrefabObject(DragAndDrop.objectReferences[0]))
-                    {
-                        return;
-                    }
-                }
             }
 
             EditorGUILayout.LabelField("Put there you prefab of TPNotification", TPAchievementDesigner.skin.GetStyle("TipLabel"));
-            notification = EditorGUILayout.ObjectField(notification, typeof(TPNotification), false) as TPNotification;
+            _notification = EditorGUILayout.ObjectField(_notification, typeof(GameObject), false) as GameObject;
 
-            if (notification == null)
+            if (_notification == null)
                 return;
+
+            if (_notification.GetComponent<TPNotification>() == null)
+                _notification.AddComponent<TPNotification>();
+            if (notification == null)
+                notification = _notification.GetComponent<TPNotification>();
 
             Space(4);
             EditorGUILayout.LabelField("Notification's Image for Icon", TPAchievementDesigner.skin.GetStyle("TipLabel"));
@@ -181,7 +180,8 @@ namespace TP_AchievementEditor
 
             if (GUI.changed)
             {
-                EditorUtility.SetDirty(notification);
+                // It's werid
+                EditorUtility.SetDirty(PrefabUtility.GetPrefabObject(_notification));
             }
         }
 
