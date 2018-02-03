@@ -104,7 +104,6 @@ namespace TP_AchievementEditor
             }
         }
 
-        
         void DrawObjects(SerializedProperty property)
         {
             property.serializedObject.UpdateIfRequiredOrScript();
@@ -173,6 +172,12 @@ namespace TP_AchievementEditor
             Space(2);
             EditorGUILayout.LabelField("Notification's TextMeshProUGUI for Description", TPAchievementDesigner.skin.GetStyle("TipLabel"));
             notification.descriptionText = EditorGUILayout.ObjectField(notification.descriptionText, typeof(TextMeshProUGUI), false) as TextMeshProUGUI;
+            Space(2);
+            EditorGUILayout.LabelField("Notification's TextMeshProUGUI for Points", TPAchievementDesigner.skin.GetStyle("TipLabel"));
+            notification.pointsText = EditorGUILayout.ObjectField(notification.pointsText, typeof(TextMeshProUGUI), false) as TextMeshProUGUI;
+            Space(2);
+            EditorGUILayout.LabelField("Notification's TextMeshProUGUI for MaxPoints", TPAchievementDesigner.skin.GetStyle("TipLabel"));
+            notification.maxPointsText = EditorGUILayout.ObjectField(notification.maxPointsText, typeof(TextMeshProUGUI), false) as TextMeshProUGUI;
 
             if (GUI.changed)
             {

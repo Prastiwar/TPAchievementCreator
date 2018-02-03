@@ -17,6 +17,6 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Points: 0
   MaxPoints: 10
-  Notification: {fileID: 114227792064254434, guid: baa2569cb5a5fbf45bc17269e681754a,
+  Notification: {fileID: 114002809759317354, guid: d09705dd5b25e5746a0eb405eb2a45f4,
     type: 2}
   NotifyLong: 2

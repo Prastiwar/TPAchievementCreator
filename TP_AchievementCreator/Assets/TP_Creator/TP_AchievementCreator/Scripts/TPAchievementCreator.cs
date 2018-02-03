@@ -7,16 +7,22 @@ namespace TP_Achievement
     public class TPAchievementCreator : MonoBehaviour
     {
         public static bool DebugMode;
+
         public List<TPAchievement> Achievements = new List<TPAchievement>();
         Dictionary<string, GameObject> _NotifyGO = new Dictionary<string, GameObject>();
         Queue<TPAchievement> AchievementQueue = new Queue<TPAchievement>();
+
         WaitForSeconds Waiter;
         WaitUntil Until;
         float WaitSeconds;
         bool IsNotify;
-        public delegate void NotifyEventHandler(GameObject notification, bool toActive);
-        NotifyEventHandler _onNotifyActive;
-        NotifyEventHandler OnNotifyActive
+
+        public delegate void NotifyActivationEventHandler(GameObject notification, bool toActive);
+        public delegate void NotifySettingEventHandler(TPNotification notification, TPAchievement achievement);
+        NotifySettingEventHandler _onNotifySet;
+        NotifyActivationEventHandler _onNotifyActive;
+
+        NotifyActivationEventHandler OnNotifyActive
         {
             get
             {
@@ -26,7 +32,17 @@ namespace TP_Achievement
             }
             set { _onNotifyActive = value; }
         }
+        NotifySettingEventHandler OnNotifySet
+        {
+            get
+            {
+                if (_onNotifySet == null)
+                    _onNotifySet = SetNotification;
+                return _onNotifySet;
+            }
 
+            set{ _onNotifySet = value; }
+        }
 
 
         public TPAchievement GetAchievement(string name)
@@ -60,9 +76,12 @@ namespace TP_Achievement
 
         public void ShowNotification(TPAchievement achievement)
         {
-            AchievementQueue.Enqueue(achievement);
-            if (!IsNotify)
-                ShowNotification();
+            if (!AchievementQueue.Contains(achievement))
+            {
+                AchievementQueue.Enqueue(achievement);
+                if (!IsNotify)
+                    ShowNotification();
+            }
         }
 
         void ShowNotification()
@@ -82,9 +101,15 @@ namespace TP_Achievement
             {
                 GO = GetNotificationObject(achievement);
             }
+            TPNotification notification = GO.GetComponent<TPNotification>();
+            OnNotifySet(notification, achievement);
 
-            GO.GetComponent<TPNotification>().SetNotification(achievement);
             StartCoroutine(IEShowNotification(GO, achievement));
+        }
+
+        void SetNotification(TPNotification notification, TPAchievement achievement)
+        {
+            notification.SetNotification(achievement);
         }
 
         IEnumerator IEShowNotification(GameObject go, TPAchievement achievement)
@@ -101,13 +126,15 @@ namespace TP_Achievement
 
             OnNotifyActive(go, false);
 
+            yield return Waiter;
+
             if (Until == null)
             {
                 Until = new WaitUntil(() => !go.activeSelf);
             }
 
             yield return Until;
-            
+
             if (AchievementQueue.Count > 0)
             {
                 ShowNotification();
@@ -117,7 +144,11 @@ namespace TP_Achievement
                 IsNotify = false;
             }
         }
-
+        
+        /// <param name="achievement"></param>
+        /// <param name="value">How many points add to achievement?</param>
+        /// <param name="showProgressNotify">Should show notification with progress?</param>
+        /// <param name="showNotifyAfterCompleted">Should show notification if achievement will'be completed after adding points?</param>
         public void AddPointTo(TPAchievement achievement, float value, bool showProgressNotify, bool showNotifyAfterCompleted)
         {
             if (achievement.IsCompleted)
@@ -142,7 +173,15 @@ namespace TP_Achievement
                 ShowNotification(achievement);
         }
 
+        public void SetOnNotifySet(NotifySettingEventHandler _NotifySettingEventHandler)
+        {
+            OnNotifySet = _NotifySettingEventHandler;
+        }
 
+        public void SetOnNotifyActive(NotifyActivationEventHandler _NotifyActivationEventHandler)
+        {
+            OnNotifyActive = _NotifyActivationEventHandler;
+        }
 
 #if UNITY_EDITOR
         public void Refresh()
