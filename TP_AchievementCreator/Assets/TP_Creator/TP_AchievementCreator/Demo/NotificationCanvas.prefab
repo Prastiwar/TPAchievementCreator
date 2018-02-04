@@ -671,7 +671,7 @@ MonoBehaviour:
   m_FillOrigin: 0
 --- !u!114 &114558918166523734
 MonoBehaviour:
-  m_ObjectHideFlags: 8
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1437777658195554}

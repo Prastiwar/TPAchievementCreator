@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TP_AchievementEditor
+namespace TP.AchievementEditor
 {
     public class TPAchievementGUIData : ScriptableObject
     {

@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using TP.Achievement;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TP_AchievementEditor
+namespace TP.AchievementEditor
 {
     [InitializeOnLoad]
     internal class TPAchievementToolsWindow : EditorWindow

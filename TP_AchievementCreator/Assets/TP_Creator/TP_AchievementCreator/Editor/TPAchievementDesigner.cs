@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using TP_Achievement;
+using TP.Achievement;
 using UnityEditor.SceneManagement;
 
-namespace TP_AchievementEditor
+namespace TP.AchievementEditor
 {
     [InitializeOnLoad]
     public class TPAchievementDesigner : EditorWindow

@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TP_Achievement;
+using TP.Achievement;
 using UnityEditor;
 
-namespace TP_AchievementEditor
+namespace TP.AchievementEditor
 {
     [CustomEditor(typeof(TPNotification))]
     public class TPNotificationEditor : ScriptlessAchievementEditor

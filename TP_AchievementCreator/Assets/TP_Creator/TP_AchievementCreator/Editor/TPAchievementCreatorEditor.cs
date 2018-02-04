@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
-using TP_Achievement;
+using TP.Achievement;
 
-namespace TP_AchievementEditor
+namespace TP.AchievementEditor
 {
     [CustomEditor(typeof(TPAchievementCreator))]
     public class TPAchievementCreatorEditor : ScriptlessAchievementEditor

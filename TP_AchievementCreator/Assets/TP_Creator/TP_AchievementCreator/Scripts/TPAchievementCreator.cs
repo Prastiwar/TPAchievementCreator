@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TP_Achievement
+namespace TP.Achievement
 {
     public class TPAchievementCreator : MonoBehaviour
     {
@@ -74,16 +74,6 @@ namespace TP_Achievement
             notification.SetActive(toActive);
         }
 
-        public void ShowNotification(TPAchievement achievement)
-        {
-            if (!AchievementQueue.Contains(achievement))
-            {
-                AchievementQueue.Enqueue(achievement);
-                if (!IsNotify)
-                    ShowNotification();
-            }
-        }
-
         void ShowNotification()
         {
             IsNotify = true;
@@ -142,6 +132,16 @@ namespace TP_Achievement
             else
             {
                 IsNotify = false;
+            }
+        }
+
+        public void ShowNotification(TPAchievement achievement)
+        {
+            if (!AchievementQueue.Contains(achievement))
+            {
+                AchievementQueue.Enqueue(achievement);
+                if (!IsNotify)
+                    ShowNotification();
             }
         }
         
