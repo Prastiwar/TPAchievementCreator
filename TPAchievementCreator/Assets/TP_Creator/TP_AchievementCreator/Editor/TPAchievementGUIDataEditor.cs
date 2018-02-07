@@ -5,7 +5,7 @@ using TP.Achievement;
 namespace TP.AchievementEditor
 {
     [CustomEditor(typeof(TPAchievementGUIData))]
-    public class TPSoundManagerGUIDataEditor : ScriptlessAchievementEditor
+    internal class TPSoundManagerGUIDataEditor : ScriptlessAchievementEditor
     {
         TPAchievementGUIData TPAchievementData;
 

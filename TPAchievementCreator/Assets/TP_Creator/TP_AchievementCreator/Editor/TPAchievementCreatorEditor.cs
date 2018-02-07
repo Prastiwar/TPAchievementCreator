@@ -4,7 +4,7 @@ using TP.Achievement;
 namespace TP.AchievementEditor
 {
     [CustomEditor(typeof(TPAchievementCreator))]
-    public class TPAchievementCreatorEditor : ScriptlessAchievementEditor
+    internal class TPAchievementCreatorEditor : ScriptlessAchievementEditor
     {
         public override void OnInspectorGUI()
         {

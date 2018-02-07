@@ -6,7 +6,7 @@ using UnityEditor;
 namespace TP.AchievementEditor
 {
     [CustomEditor(typeof(TPNotification))]
-    public class TPNotificationEditor : ScriptlessAchievementEditor
+    internal class TPNotificationEditor : ScriptlessAchievementEditor
     {
         public override void OnInspectorGUI()
         {

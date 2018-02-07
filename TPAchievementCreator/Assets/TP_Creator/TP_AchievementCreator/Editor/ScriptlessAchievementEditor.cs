@@ -4,7 +4,7 @@ using TP.Achievement;
 
 namespace TP.AchievementEditor
 {
-    public class ScriptlessAchievementEditor : Editor
+    internal class ScriptlessAchievementEditor : Editor
     {
         public readonly string scriptField = "m_Script";
 

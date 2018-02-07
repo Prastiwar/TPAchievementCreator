@@ -6,7 +6,7 @@ using UnityEditor.SceneManagement;
 namespace TP.AchievementEditor
 {
     [InitializeOnLoad]
-    public class TPAchievementDesigner : EditorWindow
+    internal class TPAchievementDesigner : EditorWindow
     {
         public static TPAchievementDesigner window;
         static string currentScene;
