@@ -2,6 +2,7 @@
 using UnityEditor;
 using TP.Achievement;
 using UnityEditor.SceneManagement;
+using TP.Utilities;
 
 namespace TP.AchievementEditor
 {
@@ -38,7 +39,7 @@ namespace TP.AchievementEditor
             }
         }
 
-        public static TPAchievementGUIData EditorData;
+        public static TPEditorGUIData EditorData;
         public static TPAchievementCreator AchievementCreator;
         public static GUISkin skin;
 
@@ -67,9 +68,13 @@ namespace TP.AchievementEditor
 
         void InitEditorData()
         {
+            string path = "Assets/TP_Creator/_CreatorResources/";
+            if (!System.IO.Directory.Exists(path))
+                System.IO.Directory.CreateDirectory(path);
+
             EditorData = AssetDatabase.LoadAssetAtPath(
-                   "Assets/TP_Creator/TP_AchievementCreator/EditorResources/AchievementEditorGUIData.asset",
-                   typeof(TPAchievementGUIData)) as TPAchievementGUIData;
+                   "Assets/TP_Creator/_CreatorResources/AchievementEditorGUIData.asset",
+                   typeof(TPEditorGUIData)) as TPEditorGUIData;
             
             if (EditorData == null)
                 CreateEditorData();
@@ -81,21 +86,36 @@ namespace TP.AchievementEditor
 
         void CheckGUIData()
         {
+            string path = "Assets/TP_Creator/TP_AchievementCreator/AchievementData/";
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            if (EditorData.Paths == null)
+            {
+                EditorData.Paths = new string[1];
+            }
+
             if (EditorData.GUISkin == null)
                 EditorData.GUISkin = AssetDatabase.LoadAssetAtPath(
-                      "Assets/TP_Creator/TP_AchievementCreator/EditorResources/TPAchievementGUISkin.guiskin",
+                      "Assets/TP_Creator/_CreatorResources/TPEditorGUISkin.guiskin",
                       typeof(GUISkin)) as GUISkin;
 
-            if (EditorData.AchievementsPath == null || EditorData.AchievementsPath.Length < 5)
-                EditorData.AchievementsPath = "TP_Creator/TP_AchievementCreator/AchievementData/";
+            if (EditorData.Paths[0] == null || EditorData.Paths[0].Length < 5)
+                EditorData.Paths[0] = "Assets/TP_Creator/TP_AchievementCreator/AchievementData/";
+
+            if (EditorData.GUISkin == null)
+            {
+                Debug.LogError("There is no guiskin for TPEditor!");
+            }
 
             EditorUtility.SetDirty(EditorData);
         }
 
         void CreateEditorData()
         {
-            TPAchievementGUIData newEditorData = ScriptableObject.CreateInstance<TPAchievementGUIData>();
-            AssetDatabase.CreateAsset(newEditorData, "Assets/TP_Creator/TP_AchievementCreator/EditorResources/AchievementEditorGUIData.asset");
+            TPEditorGUIData newEditorData = ScriptableObject.CreateInstance<TPEditorGUIData>();
+            AssetDatabase.CreateAsset(newEditorData, "Assets/TP_Creator/_CreatorResources/AchievementEditorGUIData.asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorData = newEditorData;

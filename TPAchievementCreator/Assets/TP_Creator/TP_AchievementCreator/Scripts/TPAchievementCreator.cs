@@ -186,22 +186,7 @@ namespace TP.Achievement
 #if UNITY_EDITOR
         public void Refresh()
         {
-            Achievements = FindAssetsByType<TPAchievement>();
-        }
-        List<T> FindAssetsByType<T>() where T : UnityEngine.Object
-        {
-            List<T> assets = new List<T>();
-            string[] guids = UnityEditor.AssetDatabase.FindAssets(string.Format("t:{0}", typeof(T)));
-            for (int i = 0; i < guids.Length; i++)
-            {
-                string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[i]);
-                T asset = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(assetPath);
-                if (asset != null)
-                {
-                    assets.Add(asset);
-                }
-            }
-            return assets;
+            Achievements = Utilities.TPFind.FindAssetsByType<TPAchievement>();
         }
 #endif
     }

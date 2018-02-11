@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using TP.Achievement;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -213,7 +211,7 @@ namespace TP.AchievementEditor
 
         void CreateScriptable()
         {
-            string assetPath = "Assets/" + TPAchievementDesigner.EditorData.AchievementsPath;
+            string assetPath = TPAchievementDesigner.EditorData.Paths[0];
             string newAssetPath = assetPath;
             UnityEngine.Object newObj = null;
 
