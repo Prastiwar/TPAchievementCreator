@@ -1,3 +1,5 @@
+# **This is an archived repository. Probably you want to check my** [TPFramework](https://github.com/Prastiwar/TPFrameworkUnity) **where it is merged into.**
+
 # TPAchievementCreator
 A tool which allows you to create custom achievements
 #### Full documentation: https://github.com/Prastiwar/TPAchievementCreator/blob/master/AchievementDocumentation.docx
